@@ -1,14 +1,17 @@
-export const incNumber = (num) => {
-  console.log('in action increment')
+export const incNumber = (product) => {
+  console.log("in action increment");
 
   return {
     type: "INCREMENT",
-    payload: num
+    payload: product,
   };
 };
 
-export const decNumber = () => {
-  return { type: "DECREMENT" };
+export const decNumber = (product) => {
+  return {
+    type: "DECREMENT",
+    payload: product,
+  };
 };
 
 export const addToCart = (productDetails) => {

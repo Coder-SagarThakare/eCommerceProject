@@ -21,7 +21,7 @@ import getToken, { setToken } from "../../HttpService/LocalStorageService";
 // };
 
 var initialState = 1;
-const cartArr = JSON.parse(getToken('cart')) || [];
+const cartArr = JSON.parse(getToken("cart")) || [];
 // const [cartArr, setCartArr] = useState([])
 
 export const changeNumber = (state = initialState, action) => {
@@ -44,10 +44,31 @@ export const addDataToCart = (state = cartArr, action) => {
 
   switch (action.type) {
     case "addToCart": {
-        setToken('cart',JSON.stringify([...state, action.payload])) 
+      setToken("cart", JSON.stringify([...state, action.payload]));
 
       return [...state, action.payload];
     }
+    case "INCREMENT":
+      const plus = state.map((item) => {
+        if (item._id === action.payload._id) {
+          action.payload.quantity += 1;
+          item = action.payload;
+        }
+        return item;
+      });
+      return plus;
+
+    case "DECREMENT": {
+      const updatedArray = state.map((product) => {
+        if (product._id === action.payload._id) {
+          product.quantity = action.payload.quantity - 1;
+          // product=product.quantity
+        }
+        return product;
+      });
+      return updatedArray;
+    }
+
     default:
       return cartArr;
   }

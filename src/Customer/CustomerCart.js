@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, ButtonGroup, Carousel } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { incNumber } from "../Redux/Actions/action";
+import { decNumber, incNumber } from "../Redux/Actions/action";
 
 export default function CustomerCart() {
   const cartArr = useSelector((state) => state.dataAddedToCart);
@@ -37,9 +37,9 @@ export default function CustomerCart() {
               <p>{element.description}</p>
               <div className="d-flex border align-items-center">
 
-                  <Button>-</Button>
+                  <Button onClick={()=>{dispatch(decNumber(element))}}>-</Button>
                   <p>{element.quantity} </p>
-                  <Button onClick={dispatch(incNumber(element.quantity))}>+</Button>
+                  <Button onClick={()=>dispatch(incNumber(element))}> + </Button>
               </div>
             </div>
           </div>
