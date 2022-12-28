@@ -22,3 +22,7 @@ export function setToken(tokenKey,setDataToToken) {
 export function getClear(){
     localStorage.clear()
 }
+
+export function deleteToken(key){
+    localStorage.removeItem(key)
+}

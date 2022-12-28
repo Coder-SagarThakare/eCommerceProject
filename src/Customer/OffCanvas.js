@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { useNavigate } from "react-router-dom";
 import { secureDelete, secureGet } from "../HttpService/APIService";
+import { deleteToken } from "../HttpService/LocalStorageService";
 import ChangeCustomerPassword from "./ChangeCustomerPassword";
 // import getToken from "../HttpService/LocalStorageService";
 // import UpdateCustomerInfo from "./UpdateCustomerInfo";
@@ -29,6 +30,12 @@ export default function OffCanvas({
     });
   }, []);
   // }, [updateProfile, updatePhoto]);
+
+  function logOutCustomer(){
+  deleteToken('activeCustomerToken')
+  setShowCanvas(false);
+  
+  }
 
   return (
     <>
@@ -74,6 +81,7 @@ export default function OffCanvas({
               >
                 Change password
               </Button>
+              <button onClick={()=>logOutCustomer()}>log out</button>
 
               {/* <p>Address : {address.city}</p> */}
             </div>
@@ -88,6 +96,7 @@ export default function OffCanvas({
         ) : (
           ""
         )}
+
       </div>
     </>
   );

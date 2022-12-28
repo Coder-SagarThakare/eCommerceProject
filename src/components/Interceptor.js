@@ -14,7 +14,7 @@ axiosInstance.interceptors.request.use( (config)=> {
 
     if(config.url.includes('shop/') || config.url.includes('customers/') ){
 
-      console.log(config.url);
+      // console.log(config.url);
       if(getToken('activeCustomerToken'))
       config.headers['Authorization'] = `Bearer ${getToken('activeCustomerToken')}`;
 

@@ -16,6 +16,7 @@ import CustomerRegistrationPage from "./Customer/CustomerRegistrationPage";
 import CustomerLoginPage from "./Customer/CustomerLoginPage";
 import { useState } from "react";
 import UpdateCustomerInfo from "./Customer/UpdateCustomerInfo";
+import CustomerCart from "./Customer/CustomerCart";
 
 
 function App() {
@@ -31,6 +32,8 @@ const [loggedInUser, setLoggedInUser] = useState();
           <Route path="registration" element={<CustomerRegistrationPage  />} />
           <Route path="login" element={<CustomerLoginPage />} />
           <Route path="update" element={<UpdateCustomerInfo />}/>
+          <Route path="cart" element={<CustomerCart />}/>
+
 
         </Route>
 
