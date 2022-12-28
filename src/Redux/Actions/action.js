@@ -7,10 +7,10 @@ export const incNumber = (product) => {
   };
 };
 
-export const decNumber = (product) => {
+export const decNumber = (productId) => {
   return {
     type: "DECREMENT",
-    payload: product,
+    payload: productId,
   };
 };
 

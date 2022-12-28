@@ -37,7 +37,7 @@ export default function CustomerCart() {
               <p>{element.description}</p>
               <div className="d-flex border align-items-center">
 
-                  <Button onClick={()=>{dispatch(decNumber(element))}}>-</Button>
+                  <Button  onClick={()=>{dispatch(decNumber(element._id))}}>-</Button>
                   <p>{element.quantity} </p>
                   <Button onClick={()=>dispatch(incNumber(element))}> + </Button>
               </div>

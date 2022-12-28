@@ -57,12 +57,12 @@ export const addDataToCart = (state = cartArr, action) => {
         return item;
       });
       return plus;
+      
 
     case "DECREMENT": {
       const updatedArray = state.map((product) => {
-        if (product._id === action.payload._id) {
-          product.quantity = action.payload.quantity - 1;
-          // product=product.quantity
+        if (product._id === action.payload) {
+          product.quantity = product.quantity - 1;
         }
         return product;
       });
