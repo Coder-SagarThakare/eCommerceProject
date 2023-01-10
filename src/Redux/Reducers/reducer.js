@@ -4,73 +4,100 @@
 
 import getToken, { setToken } from "../../HttpService/LocalStorageService";
 
-// var initialState = { number: 0 };
 
-// const changeNumber = (state = initialState, action) => {
 
-// //   console.log(action.payload);
+var initialState = 1; 
+const cartArr = JSON.parse(getToken("cart")) || [];
+const buyProductsPayload = {
+  items: [],
+  deliveryFee: 0,
+  total: 0
+};
+// const [cartArr, setCartArr] = useState([])
+
+// export const changeNumber = (state = initialState, action) => {
+//   console.log("in reducer");
+//   // console.log(action);
 
 //   switch (action.type) {
 //     case "INCREMENT":
-//       return { number: action.payload };
+//       return state + 1;
 //     case "DECREMENT":
-//       return action.payload;
+//       return state - 1;
 //     default:
 //       return state;
 //   }
 // };
 
-var initialState = 1;
-const cartArr = JSON.parse(getToken("cart")) || [];
-// const [cartArr, setCartArr] = useState([])
-
-export const changeNumber = (state = initialState, action) => {
-  console.log("in reducer");
-  // console.log(action);
-
-  switch (action.type) {
-    case "INCREMENT":
-      return state + 1;
-    case "DECREMENT":
-      return state - 1;
-    default:
-      return state;
-  }
-};
-
 export const addDataToCart = (state = cartArr, action) => {
-  console.log("in addDataTocart");
-  console.log(action);
 
   switch (action.type) {
     case "addToCart": {
-      setToken("cart", JSON.stringify([...state, action.payload]));
+      if (state.indexOf(action.payload) !== -1)
+        return state;
+      else {
 
-      return [...state, action.payload];
+        setToken("cart", JSON.stringify([...state, action.payload]));
+        return [...state, action.payload];
+      }
+
     }
     case "INCREMENT":
       const plus = state.map((item) => {
         if (item._id === action.payload._id) {
           action.payload.quantity += 1;
           item = action.payload;
+          item.totalPrice = item.quantity * item.price;
+
+          // setToken('cart',JSON.stringify([]))
         }
         return item;
       });
       return plus;
-      
 
     case "DECREMENT": {
       const updatedArray = state.map((product) => {
         if (product._id === action.payload) {
-          product.quantity = product.quantity - 1;
+
+          if (product.quantity !== 1) {
+            product.quantity = product.quantity - 1;
+            product.totalPrice -= product.price;
+            console.log('in decrement reducer');
+          }
         }
+        // product.quantity = 1;
         return product;
       });
       return updatedArray;
     }
+    case 'deleteFromCart': {
 
-    default:
+      const updatedArray = state.filter((product, index) => {
+        if (product._id !== action.payload)
+          return product;
+      })
+
+      setToken('cart', JSON.stringify(updatedArray))
+      return updatedArray;
+    }
+
+    default:        // every time we need to write default state otherwise code will not run.
       return cartArr;
   }
 };
-// export default changeNumber;
+
+export const buyProducts = (state = buyProductsPayload, action) => {
+
+  switch (action.type) {
+    case 'buyProducts': {
+      state = action.payload;
+      console.log(state);
+      return state;
+    }
+
+    default: return state;
+  }
+
+}
+
+

@@ -10,8 +10,6 @@ import UpdateCustomerProfilePhoto from "./UpdateCustomerProfilePhoto";
 
 export default function UpdateCustomerInfo() {
 
-  console.log('--------functions start');
-
   const [currentLoggedInUser, setCurrentLoggedInUser] = useState();
   const [updateProfile, setUpdateProfile] = useState(false);
   const [updatePhoto, setUpdatePhoto] = useState(false);
@@ -22,7 +20,6 @@ export default function UpdateCustomerInfo() {
   // const [addressId, setAddressId] = useState()
 
   useEffect(() => {
-    console.log('-------in useEffect');
     secureGet("shop/auth/self").then((response) => {
       console.log(response);
       setCurrentLoggedInUser(response.data);
@@ -34,8 +31,7 @@ export default function UpdateCustomerInfo() {
     });
   }, [updatePhoto, updateProfile, eventKey]);
 
-  // console.log(updateAddress);
-
+  // delete profile photo
   function deleteProfilePhoto() {
     axios
       .delete("https://shop-api.ngminds.com/customers/profile-picture", {
@@ -49,6 +45,7 @@ export default function UpdateCustomerInfo() {
       });
   }
 
+  // add adresss to API
   const addUpdatedAdd = (data) => {
     console.log(data);
     console.log("clicked");
@@ -77,14 +74,15 @@ export default function UpdateCustomerInfo() {
       });
   };
 
+  // remove address from API
   function removeAdd(id) {
-    console.log(id);
     secureDelete(`/customers/address/${id}}`).then((response) => {
-      console.log(response);
-      setAddressArr((prev)=>prev.filter((item)=>item._id!==id))
+      // console.log(response);
+      setAddressArr((prev) => prev.filter((item) => item._id !== id))
     });
   }
 
+  // all addressess
   const alladdresses =
     addressArr &&
     addressArr.map((element, index) => {
@@ -187,7 +185,6 @@ export default function UpdateCustomerInfo() {
 
   return (
     <div className="d-flex">
-      {console.log('----------in return block')}
       <div className="border border-primary d-flex flex-column align-items-start w-25 vh-100">
         <img src={currentLoggedInUser?.picture} className="w-100"></img>
         <p>username : {currentLoggedInUser?.name}</p>
@@ -221,10 +218,13 @@ export default function UpdateCustomerInfo() {
           >
             delete profile photo
           </button>
+
         </div>
       </div>
 
       <div className="w-100">
+      {/* accordian for add  new address */}
+
         <div className=" d-flex justify-content-center border border-danger">
           <Accordion className="" defaultActiveKey="0">
             <Accordion.Item eventKey={eventKey}>
@@ -259,6 +259,7 @@ export default function UpdateCustomerInfo() {
           </Accordion>{" "}
         </div>
 
+                    {/* all addressses */}
         <div
           className=""
           style={{
@@ -270,6 +271,7 @@ export default function UpdateCustomerInfo() {
         >
           {alladdresses}
         </div>
+
       </div>
 
       {updatePhoto ? (

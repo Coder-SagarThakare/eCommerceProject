@@ -1,6 +1,4 @@
 export const incNumber = (product) => {
-  console.log("in action increment");
-
   return {
     type: "INCREMENT",
     payload: product,
@@ -20,3 +18,18 @@ export const addToCart = (productDetails) => {
     payload: productDetails,
   };
 };
+
+export const deleteFromCart = (productId) => {
+  // {console.log('in delete cart');}
+  return {
+    type: "deleteFromCart",
+    payload: productId,
+  };
+};
+
+export const buyProducts = (product)=>{
+    return{
+      type : 'buyProducts',
+      payload : product
+    }
+}

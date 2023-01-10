@@ -10,7 +10,7 @@ import { TfiShoppingCartFull } from "react-icons/tfi";
 import { DiYeoman } from "react-icons/di";
 
 import OffCanvas from "../Customer/OffCanvas";
-import { Badge, Button } from "react-bootstrap";
+import { Badge, Button, Pagination } from "react-bootstrap";
 
 import { useDispatch, useSelector } from "react-redux"; // disptach action ko trigger krta hai. action ko call karke batat hai ki muze yeh chahiye. fir action reducer k pass chala jayega
 import { incNumber, decNumber, addToCart } from "../Redux/Actions/action";
@@ -20,15 +20,14 @@ export default function Shopping({ loggedInUser }) {
   // states
   const [currentItems, setCurrentItems] = useState([]);
   const [searchText, setSearchText] = useState("");
-  // const [searchParams] = useSearchParams();
 
   const navigate = useNavigate();
-  console.log(store.getState().dataAddedToCart.length);
+  // console.log(store.getState().dataAddedToCart.length);
   const [currentLoggedInUser, setCurrentLoggedInUser] = useState();
   const [showCanvas, setShowCanvas] = useState(false);
   const [paginationObj, setPaginationObj] = useState({
     sortBy: "",
-    limit: 5,
+    limit: 10,
     pageNo: 1,
     searchText: "",
   });
@@ -44,18 +43,18 @@ export default function Shopping({ loggedInUser }) {
     if (paginationObj.limit !== "" && paginationObj.pageNo !== "")
       paginationObj?.sortBy === ""
         ? secureGet(
-            `/shop/products?limit=${paginationObj.limit}&page=${paginationObj.pageNo}`
-          ).then((response) => {
-            console.log(response);
-            setCurrentItems(response.data.results);
-            setTotalPages(response.data.totalPages);
-          })
+          `/shop/products?limit=${paginationObj.limit}&page=${paginationObj.pageNo}`
+        ).then((response) => {
+          console.log(response);
+          setCurrentItems(response.data.results);
+          setTotalPages(response.data.totalPages);
+        })
         : secureGet(
-            `/shop/products?sortBy=${paginationObj.sortBy}&limit=${paginationObj.limit}&page=${paginationObj.pageNo}`
-          ).then((response) => {
-            console.log(response);
-            setCurrentItems(response.data.results);
-          });
+          `/shop/products?sortBy=${paginationObj.sortBy}&limit=${paginationObj.limit}&page=${paginationObj.pageNo}`
+        ).then((response) => {
+          console.log(response);
+          setCurrentItems(response.data.results);
+        });
 
     searchText &&
       secureGet(
@@ -79,7 +78,7 @@ export default function Shopping({ loggedInUser }) {
     currentItems.map((product, index) => {
       return (
         <div
-          className="border py-2 px-2 rounded-3 h-auto mt-3 bg-light gap-4 d-flex flex-column"
+          className="border py-2 px-2 rounded-3 mt-3 bg-light gap-4 d-flex flex-column"
           style={{
             width: "22%",
             boxSizing: "border-box",
@@ -105,22 +104,24 @@ export default function Shopping({ loggedInUser }) {
           </div>
 
           <div className="rounded-3">
-            <p className="m-0">product name : {product.name}</p>
+            <p className="m-0 text-truncate">product name : <b>{product.name}</b></p>
             <p className="m-0">price : {product.price}</p>
             <p className="text-truncate m-0">
               description : {product.description}
             </p>
           </div>
           <div className="d-flex justify-content-center mt-2">
-            <Button
-              variant="primary"
+            <button
+              type="button"
+              className="btn btn-outline-primary"
               onClick={() => {
                 product.quantity = 1;
+                product.totalPrice = product.quantity * product.price;
                 dispatch(addToCart(product));
               }}
             >
               Add to cart
-            </Button>
+            </button>
           </div>
 
           {/* <button>{index}</button> */}
@@ -147,12 +148,12 @@ export default function Shopping({ loggedInUser }) {
         className="navbar bg-secondary d-flex justify-content-between align-items-center border w-100 "
         style={{ padding: "0 2%" }}
       >
-        <p>online shopping</p>
+        <h4>online shopping</h4>
 
-        {getToken("activeCustomerToken") ? (
-          <div className="d-flex align-items-center gap-1">
+
+        <div className="d-flex align-items-center">
             <div
-            role={'button'}
+              role={'button'}
               onClick={() => {
                 navigate("/cart");
               }}
@@ -161,35 +162,41 @@ export default function Shopping({ loggedInUser }) {
               <Badge bg="secondary">{cartItem} </Badge>|
             </div>
 
-            <div
-              className="d-flex  justify-content-center"
-              onClick={() => {
-                console.log("heii");
-                setShowCanvas(true);
-              }}
-            >
-              <button className="bg-transparent border-1">
-                <DiYeoman />
-                {/* <img src={currentLoggedInUser.images[0]}></img> */}
-                <p>{currentLoggedInUser?.name}</p>
+          {getToken("activeCustomerToken") ? (
+            // if customer token is present then show this div
+
+            <div className="d-flex align-items-center gap-1">
+              <div
+                className="d-flex  justify-content-center"
+                onClick={() => {
+                  setShowCanvas(true);
+                }}
+              >
+                <button className="bg-transparent border-1">
+                  <DiYeoman />
+                  {/* <img src={currentLoggedInUser.images[0]}></img> */}
+                  <p>{currentLoggedInUser?.name}</p>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="p-3">
+              <button
+                onClick={() => {
+                  navigate("/registration");
+                }}
+              >
+                Register <CgProfile />
+              </button>
+
+              <button onClick={() => navigate("/login")}>
+                Login <CgProfile />
               </button>
             </div>
-          </div>
-        ) : (
-          <div>
-            <button
-              onClick={() => {
-                navigate("/registration");
-              }}
-            >
-              Register <CgProfile />
-            </button>
+          )}
+        </div>
 
-            <button onClick={() => navigate("/login")}>
-              Login <CgProfile />
-            </button>
-          </div>
-        )}
+
       </div>
 
       {showCanvas ? (
@@ -203,27 +210,11 @@ export default function Shopping({ loggedInUser }) {
         ""
       )}
 
-        {/* dummy inc dec redux
-      <div>
-        <button
-          onClick={() => {
-            console.log(" in onclick");
-            dispatch(incNumber());
-          }}
-        >
-          <span>+</span>
-        </button>
 
-        <input value={myState} onChange={() => {}} />
-        <button onClick={() => dispatch(decNumber())}>
-          <span>-</span>
-        </button>
-      </div> */}
-
-      {/* ================= sort by, limit, page no*/}
-      <div className="w-100 d-flex justify-content-between p-2" style={{boxShadow:'5px 5px 7px #d4d4d4'}}>
+      {/* ================= search sort by, limit, page no*/}
+      <div className="w-100 d-flex justify-content-between p-2" style={{ boxShadow: '5px 5px 7px #d4d4d4' }}>
         {/* search box div */}
-        <div>
+        <div className="d-flex">
           <input
             className="w-75"
             style={{ border: "0", borderBottom: "1px solid #a19f9f" }}
@@ -232,6 +223,7 @@ export default function Shopping({ loggedInUser }) {
           />
 
           <Button
+
             variant="primary"
             onClick={() => {
               setPaginationObj((prev) => {
@@ -313,6 +305,28 @@ export default function Shopping({ loggedInUser }) {
         }}
       >
         {productList}
+      </div>
+
+      {/* pagination  */}
+      <div className="pt-3">
+        <Pagination>
+          {/* <Pagination.First /> */}
+          <Pagination.Prev />
+          {/* <Pagination.Item>{1}</Pagination.Item> */}
+          <Pagination.Ellipsis />
+
+          {/* <Pagination.Item>{10}</Pagination.Item> */}
+          {paginationObj?.pageNo >= 2 ? <Pagination.Item>{paginationObj?.pageNo - 1}</Pagination.Item> : ''}
+          <Pagination.Item active>{paginationObj?.pageNo}</Pagination.Item>
+          {/* {totalPages === paginationObj.pageNo  ? '': <Pagination.Item>{Number(paginationObj?.pageNo)+1}</Pagination.Item>} */}
+          {totalPages === paginationObj.pageNo ? <p>::: {totalPages}</p> : <p>--- {Number(paginationObj.pageNo)+1}</p>}
+          {/* <Pagination.Item disabled>{14}</Pagination.Item> */}
+
+          <Pagination.Ellipsis />
+          {/* <Pagination.Item>{20}</Pagination.Item> */}
+          <Pagination.Next />
+          {/* <Pagination.Last /> */}
+        </Pagination>
       </div>
 
       <div className="border"></div>

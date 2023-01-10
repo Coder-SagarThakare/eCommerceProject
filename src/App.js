@@ -17,22 +17,28 @@ import CustomerLoginPage from "./Customer/CustomerLoginPage";
 import { useState } from "react";
 import UpdateCustomerInfo from "./Customer/UpdateCustomerInfo";
 import CustomerCart from "./Customer/CustomerCart";
+import CreateOrder from "./Customer/CreateOrder";
+import CustomerConfirmOrder from "./Customer/CustomerConfirmOrder";
+import CustomerOrderHistory from "./Customer/CustomerOrderHistory";
 
 
 function App() {
 
-const [loggedInUser, setLoggedInUser] = useState();
+  const [loggedInUser, setLoggedInUser] = useState();
 
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/">
-          <Route path="" element={<Shopping loggedInUser={loggedInUser}/>} />
-          <Route path="registration" element={<CustomerRegistrationPage  />} />
+          <Route path="" element={<Shopping loggedInUser={loggedInUser} />} />
+          <Route path="registration" element={<CustomerRegistrationPage />} />
           <Route path="login" element={<CustomerLoginPage />} />
-          <Route path="update" element={<UpdateCustomerInfo />}/>
-          <Route path="cart" element={<CustomerCart />}/>
+          <Route path="update" element={<UpdateCustomerInfo />} />
+          <Route path="cart" element={<CustomerCart />} />
+          <Route path='order' element={<CreateOrder />} />
+          <Route path="confirmOrder" element={<CustomerConfirmOrder />} />
+          <Route path="orderHistory" element={ <CustomerOrderHistory /> } />
 
 
         </Route>
@@ -41,7 +47,7 @@ const [loggedInUser, setLoggedInUser] = useState();
           <Route path="" element={<Navigate to="/seller/auth/login" />} />
 
           <Route element={<ProtectedRoutes />}>             {/*routing for myprofile */}
-            
+
             <Route path="myProfile" element={<MyProfile />} />
             <Route path="companyData" element={<CompanyData />} />
             <Route path="auth/verify-email" element={<VerifyMail />} />
